@@ -325,7 +325,7 @@ def manga(update: Update, context: CallbackContext):
         title, title_native, title_english = json["title"].get("romaji", False), json["title"].get(
             "native", False
         ), json["title"].get("english", False)
-        start_year, start_month, start_day, end_year, end_month, end_day, status, score, chapter_s, volume_s = (
+        start_year, start_month, start_day, end_year, end_month, end_day, status, score, chapters, volumes = (
             json["startDate"].get("year", False),
             json["startDate"].get("month", False),
             json["startDate"].get("day", False),
@@ -345,20 +345,20 @@ def manga(update: Update, context: CallbackContext):
                     msg += f"* | {title_native}*"
         if start_year:
             msg += f"\n➳ *Start Date:* {start_day}/{start_month}/{start_year}"
-            if not:
-                msg+= f"*NA*"
+        else:
+            msg+= f"*NA*"
         if end_year:
-            msg += f"\n➳ *End Date:* {end_day}/{end_month}/{end_year}" or "NA"
-            if not:
-                msg+= f"*NA*"
+            msg += f"\n➳ *End Date:* {end_day}/{end_month}/{end_year}"
+        else:
+            msg+= f"*NA*"
         if status:
-            msg += f"\n➳ *Status:* {status}" or "NA"
+            msg += f"\n➳ *Status:* {status}" 
         if score:
             msg += f"\n➳ *Score:* {score}"
-        if chapter_s:
-            msg += f"\n➳ *Chapter No:* {chapter_s}" or "NA"
-        if volume_s:
-            msg += f"\n➳ *Volume Count:* {volume_s}" or "NA"
+        if chapters:
+            msg += f"\n➳ *Chapter No:* {chapters}"
+        if volumes:
+            msg += f"\n➳ *Volume Count:* {volumes}" 
         msg += "\n➳ *Genres:* "
         for x in json.get("genres", []):
             msg += f"{x}, "
