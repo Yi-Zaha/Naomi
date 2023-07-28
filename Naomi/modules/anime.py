@@ -341,22 +341,26 @@ def manga(update: Update, context: CallbackContext):
             msg += f"➳ *Title: {title}*"
             if title_english:
                 msg += f"* | {title_english}*"
-        if not start_year:
+        if start_year:
             msg += f"\n➳ *Start Date:* {start_day}/{start_month}/{start_year}"
-        else:
-            msg+= f"*NA*"
-        if not end_year:
+        #else:
+            #msg+= f"*NA*"
+        if end_year:
             msg += f"\n➳ *End Date:* {end_day}/{end_month}/{end_year}"
-        else:
-            msg+= f"*NA*"
+        #else:
+            #msg+= f"*NA*"
         if status:
             msg += f"\n➳ *Status:* {status}" 
         if score:
             msg += f"\n➳ *Score:* {score}"
         if chapters:
             msg += f"\n➳ *Chapter No:* {chapters}"
+        else:
+            msg+= f"*NA*"
         if volumes:
-            msg += f"\n➳ *Volume Count:* {volumes}" 
+            msg += f"\n➳ *Volume Count:* {volumes}"
+        else:
+            msg+= f"*NA*"
         msg += "\n➳ *Genres:* "
         for x in json.get("genres", []):
             msg += f"{x}, "
