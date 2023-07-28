@@ -322,9 +322,9 @@ def manga(update: Update, context: CallbackContext):
         return
     if json:
         json = json["data"]["Media"]
-        title, title_native = json["title"].get("romaji", False), json["title"].get(
+        title, title_native, title_english = json["title"].get("romaji", False), json["title"].get(
             "native", False
-        )
+        ), json["title"].get("english", False)
         start_year, start_month, start_day, end_year, end_month, end_day, status, score, chapter_s, volume_s = (
             json["startDate"].get("year", False),
             json["startDate"].get("month", False),
@@ -339,10 +339,14 @@ def manga(update: Update, context: CallbackContext):
         )
         if title:
             msg += f"➳ *Title: {title}*"
-            if title_native:
-                msg += f" (`{title_native}`)"
+            if title_english:
+                msg += f"* | {title_english}*"
+                if title_native:
+                    msg += f"* | {title_native}*"
         if start_year:
-            msg += f"\n➳ *Start Date:* {start_day}/{start_month}/{start_year}" or "NA"
+            msg += f"\n➳ *Start Date:* {start_day}/{start_month}/{start_year}"
+            if not:
+                msg+= f"*NA*"
         if end_year:
             msg += f"\n➳ *End Date:* {end_day}/{end_month}/{end_year}" or "NA"
         if status:
