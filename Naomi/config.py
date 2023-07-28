@@ -1,6 +1,7 @@
 import json
 import os
 from dotenv import load_dotenv
+from Naomi import config
 
 load_dotenv(".env")
 
