@@ -349,6 +349,8 @@ def manga(update: Update, context: CallbackContext):
                 msg+= f"*NA*"
         if end_year:
             msg += f"\n➳ *End Date:* {end_day}/{end_month}/{end_year}" or "NA"
+            if not:
+                msg+= f"*NA*"
         if status:
             msg += f"\n➳ *Status:* {status}" or "NA"
         if score:
