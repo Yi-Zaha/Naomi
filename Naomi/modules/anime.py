@@ -355,12 +355,8 @@ def manga(update: Update, context: CallbackContext):
             msg += f"\n➳ *Score:* {score}"
         if chapters:
             msg += f"\n➳ *Chapter No:* {chapters}"
-        else:
-            msg+= f"*NA*"
         if volumes:
             msg += f"\n➳ *Volume Count:* {volumes}"
-        else:
-            msg+= f"*NA*"
         msg += "\n➳ *Genres:* "
         for x in json.get("genres", []):
             msg += f"{x}, "
