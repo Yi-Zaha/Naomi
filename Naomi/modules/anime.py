@@ -341,14 +341,14 @@ def manga(update: Update, context: CallbackContext):
             msg += f"➳ *Title: {title}*"
             if title_english:
                 msg += f"* | {title_english}*"
-        if start_year:
+        if not start_year:
             msg += f"\n➳ *Start Date:* {start_day}/{start_month}/{start_year}"
-            else:
-                 msg+= f"*NA*"
-        if end_year:
+        else:
+            msg+= f"*NA*"
+        if not end_year:
             msg += f"\n➳ *End Date:* {end_day}/{end_month}/{end_year}"
-            else:
-                 msg+= f"*NA*"
+        else:
+            msg+= f"*NA*"
         if status:
             msg += f"\n➳ *Status:* {status}" 
         if score:
