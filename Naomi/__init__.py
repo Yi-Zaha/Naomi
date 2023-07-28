@@ -9,12 +9,11 @@ from pyrogram import Client, errors
 from Python_ARQ import ARQ
 from telethon import TelegramClient
 from dotenv import load_dotenv
-from Naomi import DEMONS, DEV_USERS, DRAGONS, OWNER_ID, TIGERS, WOLVES, dispatcher
 
 StartTime = time.time()
 
 load_dotenv('.env', override=True)
-    
+
 # enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -100,6 +99,9 @@ if ENV:
         BL_CHATS = set(int(x) for x in os.environ.get("BL_CHATS", "").split())
     except ValueError:
         raise Exception("Your blacklisted chats list does not contain valid integers.")
+
+else:
+    from Naomi.config import Development as Config
 
     TOKEN = Config.TOKEN
 
