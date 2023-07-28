@@ -9,7 +9,7 @@ from pyrogram import Client, errors
 from Python_ARQ import ARQ
 from telethon import TelegramClient
 from dotenv import load_dotenv
-from Naomi import config
+from Naomi import DEMONS, DEV_USERS, DRAGONS, OWNER_ID, TIGERS, WOLVES, dispatcher
 
 StartTime = time.time()
 
