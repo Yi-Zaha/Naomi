@@ -134,11 +134,7 @@ character_query = """
 """
 
 manga_query = """
-query ($id: Int,$search: String) {
-    Page (page: $page, perPage: $perPage) {
-        pageInfo {
-            total
-        }
+query ($id: Int,$search: String) { 
     Media (id: $id, type: MANGA,search: $search) { 
         id
         title {
@@ -168,12 +164,25 @@ query ($id: Int,$search: String) {
         bannerImage
     }
 }
-}
 """
 
 url = "https://graphql.anilist.co"
 
-
+@run_async
+def searchanilist(search, manga=False):
+    typea = "MANGA" if manga else "ANIME"
+    variables = {"search": search, "type": typea, "page": 1, "perPage": 10}
+    response = requests.post(
+        anilisturl, json={"query": anilist_query, "variables": variables}
+    )
+    msg = ""
+    jsonData = json.loads(response.text)
+    res = list(jsonData.keys())
+    if "errors" in res:
+        msg += f"**Error** : `{jsonData['errors'][0]['message']}`"
+        return msg, False
+    return jsonData["data"]["Page"]["media"], True
+    
 @run_async
 def airing(update: Update, context: CallbackContext):
     message = update.effective_message
@@ -317,14 +326,14 @@ def manga(update: Update, context: CallbackContext):
         update.effective_message.reply_text("Format : /manga < manga name >")
         return
     search = search[1]
-    variables = {"search": search, "page": 1, "perPage": 10}
+    variables = {"search": search}
     json = requests.post(
         url, json={"query": manga_query, "variables": variables}
     ).json()
+    res = list(result.keys())
     msg = ""
-    if "errors" in json.keys():
-        update.effective_message.reply_text("Manga not found")
-        return
+        if "errors" in res:
+            return f"<b>Error</b> : <code>{result['errors'][0]['message']}</code>", None
     if json:
         json = json["data"]["Media"]
         title, title_native, title_english = json["title"].get("romaji", False), json["title"].get(
