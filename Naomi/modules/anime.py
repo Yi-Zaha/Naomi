@@ -332,8 +332,8 @@ def manga(update: Update, context: CallbackContext):
     ).json()
     res = list(result.keys())
     msg = ""
-        if "errors" in res:
-            return f"<b>Error</b> : <code>{result['errors'][0]['message']}</code>", None
+    if "errors" in res:
+        return f"<b>Error</b> : <code>{result['errors'][0]['message']}</code>", None
     if json:
         json = json["data"]["Media"]
         title, title_native, title_english = json["title"].get("romaji", False), json["title"].get(
