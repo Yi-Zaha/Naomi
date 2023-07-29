@@ -330,7 +330,7 @@ def manga(update: Update, context: CallbackContext):
     json = requests.post(
         url, json={"query": manga_query, "variables": variables}
     ).json()
-    res = list(result.keys())
+    res = list(json.keys())
     msg = ""
     if "errors" in res:
         return f"<b>Error</b> : <code>{result['errors'][0]['message']}</code>", None
