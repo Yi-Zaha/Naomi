@@ -134,7 +134,11 @@ character_query = """
 """
 
 manga_query = """
-query ($id: Int,$search: String) { 
+query ($id: Int,$search: String) {
+    Page (page: $page, perPage: $perPage) {
+        pageInfo {
+            total
+        }
     Media (id: $id, type: MANGA,search: $search) { 
         id
         title {
@@ -163,6 +167,7 @@ query ($id: Int,$search: String) {
         genres
         bannerImage
     }
+}
 }
 """
 
@@ -312,7 +317,7 @@ def manga(update: Update, context: CallbackContext):
         update.effective_message.reply_text("Format : /manga < manga name >")
         return
     search = search[1]
-    variables = {"search": search}
+    variables = {"search": search, "page": 1, "perPage": 10}
     json = requests.post(
         url, json={"query": manga_query, "variables": variables}
     ).json()
