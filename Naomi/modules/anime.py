@@ -249,7 +249,7 @@ def anime(update: Update, context: CallbackContext):
         [
             InlineKeyboardButton(
                 anime["title"]["english"] or anime["title"]["romaji"],
-                f"anime:{message.from_user.id}:{anime['id']}"
+                callback_data=f"anime:{message.from_user.id}:{anime['id']}"
             )
         ]
         for anime in result
@@ -405,7 +405,7 @@ def manga(update: Update, context: CallbackContext):
         [
             InlineKeyboardButton(
                 manga["title"]["english"] or manga["title"]["romaji"],
-                f"manga:{message.from_user.id}:{manga['id']}"
+                callback_data=f"manga:{message.from_user.id}:{manga['id']}"
             )
         ]
         for manga in result
