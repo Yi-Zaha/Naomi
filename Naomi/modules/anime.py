@@ -295,7 +295,7 @@ def anime_button(update: Update, context: CallbackContext):
     if json:
         json = json["data"]["Media"]
         msg = (
-            f"➳ *Title : {json['title']['romaji']}* *(`{json['title']['native']}`)*\n"
+            f"➳ *Title : {json['title']['romaji']}* (`{json['title']['native']}`)\n"
             f"➳ *Type:* {json['format']}\n➳ *Status:* {json['status']}\n"
             f"➳ *Episodes:* {json.get('episodes', 'N/A')}\n"
             f"➳ *Duration:* {json.get('duration', 'N/A')} Per Ep.\n"
