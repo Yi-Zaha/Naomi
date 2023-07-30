@@ -330,6 +330,7 @@ def anime_button(update: Update, context: CallbackContext):
                 InlineKeyboardButton("Trailer 🎬", url=trailer),
             ]
         ] if trailer else [[InlineKeyboardButton("🔖 More Info 🔖", url=info)]]
+        buttons = []
         buttons.append([InlineKeyboardButton("« Back", callback_data=f"anilist_back:anime:{back_hash}:{button_user}")])
 
         if title_img:
@@ -514,7 +515,9 @@ def manga_button(update: Update, context: CallbackContext):
         buttons = [
             [
                 InlineKeyboardButton("More Info", url=info)
-            ],
+            ]
+        ]
+        buttons = [
             [
                 InlineKeyboardButton("« Back", callback_data=f"anilist_back:manga:{back_hash}:{button_user}")
             ]
