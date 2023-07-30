@@ -335,8 +335,7 @@ def anime_button(update: Update, context: CallbackContext):
 
         if title_img:
             try:
-                bot.send_photo(
-                    chat_id=message.chat.id,
+                message.edit_photo(
                     photo=title_img,
                     caption=msg,
                     parse_mode=ParseMode.MARKDOWN,
@@ -348,8 +347,9 @@ def anime_button(update: Update, context: CallbackContext):
                     message.chat.id,
                     msg,
                     parse_mode=ParseMode.MARKDOWN,
-                    reply_markup=InlineKeyboardMarkup(buttons),
+                    reply_markup=InlineKeyboardMarkup(buttons[:-1]),
                 )
+                message.delete()
         else:
             bot.send_message(
                 message.chat.id,
@@ -357,9 +357,6 @@ def anime_button(update: Update, context: CallbackContext):
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(buttons),
             )
-        
-        message.delete()
-
 
 
 @run_async
@@ -527,8 +524,7 @@ def manga_button(update: Update, context: CallbackContext):
         
         if image:
             try:
-                bot.send_photo(
-                    chat_id=message.chat.id,
+                message.edit_photo(
                     photo=image,
                     caption=msg,
                     parse_mode=ParseMode.MARKDOWN,
@@ -540,8 +536,9 @@ def manga_button(update: Update, context: CallbackContext):
                     message.chat.id,
                     msg,
                     parse_mode=ParseMode.MARKDOWN,
-                    reply_markup=InlineKeyboardMarkup(buttons),
+                    reply_markup=InlineKeyboardMarkup(buttons[:-1]),
                 )
+                message.delete()
         else:
             bot.send_message(
                 message.chat.id,
@@ -549,8 +546,6 @@ def manga_button(update: Update, context: CallbackContext):
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(buttons),
             )
-        
-        message.delete()
 
 @run_async
 def anilist_back(update: Update, context: CallbackContext):
