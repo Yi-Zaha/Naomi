@@ -255,7 +255,7 @@ def anime(update: Update, context: CallbackContext):
         for anime in result
     ]
     
-    update.effective_message.reply_text(f"Search results for **{search}**:", reply_markup=InlineKeyboardMarkup(buttons))
+    update.effective_message.reply_text(f"Search results for *{search}*:", reply_markup=InlineKeyboardMarkup(buttons))
 
 @run_async
 def anime_button(update: Update, context: CallbackContext):
@@ -282,7 +282,7 @@ def anime_button(update: Update, context: CallbackContext):
         query.answer("Processing ...")
         json = json["data"]["Media"]
         msg = (
-            f"➳ *Title : {json['title']['romaji']}* *(`{json['title']['native']}`)*\n"
+            f"➳ *Title : {json['title']['romaji']}* *| {json['title']['english']}*\n"
             f"➳ *Type:* {json['format']}\n➳ *Status:* {json['status']}\n"
             f"➳ *Episodes:* {json.get('episodes', 'N/A')}\n"
             f"➳ *Duration:* {json.get('duration', 'N/A')} Per Ep.\n"
@@ -411,7 +411,7 @@ def manga(update: Update, context: CallbackContext):
         for manga in result
     ]
     
-    update.effective_message.reply_text(f"Search results for **{search}**:", reply_markup=InlineKeyboardMarkup(buttons))
+    update.effective_message.reply_text(f"Search results for *{search}*:", reply_markup=InlineKeyboardMarkup(buttons))
 
 @run_async
 def manga_button(update: Update, context: CallbackContext):
