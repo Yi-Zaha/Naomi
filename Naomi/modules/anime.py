@@ -342,6 +342,7 @@ def anime_button(update: Update, context: CallbackContext):
                     reply_markup=InlineKeyboardButton(buttons),
                 )
             except:
+                raise
                 msg += f" [〽️]({title_img})"
                 bot.send_message(
                     message.chat.id,
@@ -531,6 +532,7 @@ def manga_button(update: Update, context: CallbackContext):
                     reply_markup=InlineKeyboardButton(buttons),
                 )
             except Exception:
+                raise
                 msg += f" [〽️]({image})"
                 bot.send_message(
                     message.chat.id,
