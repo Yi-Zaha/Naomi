@@ -236,7 +236,7 @@ def anime(update: Update, context: CallbackContext):
     else:
         search = search[1]
 
-    result, ok = await searchanilist(search)
+    result, ok = searchanilist(search)
     
     if not ok:
         update.effective_message.reply_text(result)
@@ -392,7 +392,7 @@ def manga(update: Update, context: CallbackContext):
     
     search = search[1]
 
-    result, ok = await searchanilist(search)
+    result, ok = searchanilist(search)
     
     if not ok:
         update.effective_message.reply_text(result)
