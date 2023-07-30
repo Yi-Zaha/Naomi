@@ -19,10 +19,11 @@ prequel_btn = "⬅️ Prequel"
 sequel_btn = "Sequel ➡️"
 close_btn = "Close ❌"
 back_btn = "« Back"
+searches = dict()
 result_imgs = [
     "https://te.legra.ph//file/69927554852c3f444ef79.jpg",
 ]
-searches = dict()
+
 
 def shorten(description, info="anilist.co"):
     msg = ""
@@ -262,7 +263,7 @@ def anime(update: Update, context: CallbackContext):
         for anime in result
     ]
     
-    update.effective_message.reply_text(
+    update.effective_message.reply_photo(
         photo=random.choice(result_imgs),
         caption=f"Search results for *{search}*:",
         parse_mode=ParseMode.MARKDOWN,
@@ -428,7 +429,7 @@ def manga(update: Update, context: CallbackContext):
         for manga in result
     ]
     
-    update.effective_message.reply_text(
+    update.effective_message.reply_photo(
         photo=random.choice(result_imgs),
         caption=f"Search results for *{search}*:",
         parse_mode=ParseMode.MARKDOWN,
