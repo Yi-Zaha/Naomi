@@ -336,7 +336,7 @@ def anime_button(update: Update, context: CallbackContext):
         if title_img:
             try:
                 message.edit_media(
-                    media=InputMediaPhoto(title_img, caption=msg, parse_mode=ParseMode.MARKFOWN),
+                    media=InputMediaPhoto(title_img, caption=msg, parse_mode=ParseMode.MARKDOWN),
                     reply_markup=InlineKeyboardMarkup(buttons),
                 )
             except:
