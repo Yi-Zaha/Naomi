@@ -18,6 +18,7 @@ kayo_btn = "Kayo 🏴‍☠️"
 prequel_btn = "⬅️ Prequel"
 sequel_btn = "Sequel ➡️"
 close_btn = "Close ❌"
+back_btn = "« Back"
 searches = dict()
 result_imgs = [
     "https://te.legra.ph//file/69927554852c3f444ef79.jpg",
@@ -330,8 +331,7 @@ def anime_button(update: Update, context: CallbackContext):
                 InlineKeyboardButton("Trailer 🎬", url=trailer),
             ]
         ] if trailer else [[InlineKeyboardButton("🔖 More Info 🔖", url=info)]]
-        buttons = []
-        buttons.append([InlineKeyboardButton("« Back", callback_data=f"anilist_back:anime:{back_hash}:{button_user}")])
+        buttons.append([InlineKeyboardButton(back_btn, callback_data=f"anilist_back:anime:{back_hash}:{button_user}")])
 
         if title_img:
             try:
@@ -339,7 +339,7 @@ def anime_button(update: Update, context: CallbackContext):
                     media=InputMediaPhoto(title_img),
                     caption=msg,
                     parse_mode=ParseMode.MARKDOWN,
-                    reply_markup=InlineKeyboardButton(buttons),
+                    reply_markup=InlineKeyboardMarkup(buttons),
                 )
             except:
                 raise
@@ -515,12 +515,10 @@ def manga_button(update: Update, context: CallbackContext):
         buttons = [
             [
                 InlineKeyboardButton("More Info", url=info)
-            ]
-        ]
-        buttons = [
+            ],
             [
-                InlineKeyboardButton("« Back", callback_data=f"anilist_back:manga:{back_hash}:{button_user}")
-            ]
+                InlineKeyboardButton(back_btn, callback_data=f"anilist_back:manga:{back_hash}:{button_user}")
+            ],
         ]
         image = f"https://img.anili.st/media/{json.get('id')}"
         msg += f"\n\n➳ *Description:*_{bs4.BeautifulSoup(json.get('description', None), features='html.parser').text}_"
@@ -531,7 +529,7 @@ def manga_button(update: Update, context: CallbackContext):
                     media=InputMediaPhoto(image),
                     caption=msg,
                     parse_mode=ParseMode.MARKDOWN,
-                    reply_markup=InlineKeyboardButton(buttons),
+                    reply_markup=InlineKeyboardMarkup(buttons),
                 )
             except Exception:
                 raise
