@@ -6,7 +6,7 @@ import random
 import bs4
 import jikanpy
 import requests
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update, InputMediaPhoto
 from telegram.ext import CallbackContext, CallbackQueryHandler, run_async
 
 from Naomi import DEV_USERS, DRAGONS, OWNER_ID, dispatcher
@@ -335,11 +335,11 @@ def anime_button(update: Update, context: CallbackContext):
 
         if title_img:
             try:
-                message.edit_photo(
-                    photo=title_img,
+                message.edit_media(
+                    media=InputMediaPhoto(title_img),
                     caption=msg,
                     parse_mode=ParseMode.MARKDOWN,
-                    reply_markup=InlineKeyboardMarkup(buttons),
+                    reply_markup=InlineKeyboardButton(buttons),
                 )
             except:
                 msg += f" [〽️]({title_img})"
@@ -524,15 +524,15 @@ def manga_button(update: Update, context: CallbackContext):
         
         if image:
             try:
-                message.edit_photo(
-                    photo=image,
+                message.edit_media(
+                    media=InputMediaPhoto(title_img),
                     caption=msg,
                     parse_mode=ParseMode.MARKDOWN,
-                    reply_markup=InlineKeyboardMarkup(buttons),
+                    reply_markup=InlineKeyboardButton(buttons),
                 )
             except Exception:
                 msg += f" [〽️]({image})"
-                bot.send_photo(
+                bot.send_message(
                     message.chat.id,
                     msg,
                     parse_mode=ParseMode.MARKDOWN,
@@ -582,8 +582,8 @@ def anilist_back(update: Update, context: CallbackContext):
         for item in result
     ]
     
-    message.edit_photo(
-        photo=random.choice(result_imgs),
+    message.edit_media(
+        media=InputMediaPhoto(random.choice(result_imgs)),
         caption=f"Search results for *{search}*:",
         parse_mode=ParseMode.MARKDOWN,
         reply_markup=InlineKeyboardMarkup(buttons),
