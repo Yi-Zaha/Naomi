@@ -18,7 +18,6 @@ kayo_btn = "Kayo 🏴‍☠️"
 prequel_btn = "⬅️ Prequel"
 sequel_btn = "Sequel ➡️"
 close_btn = "Close ❌"
-aback_btn = "« Back"
 searches = dict()
 result_imgs = [
     "https://te.legra.ph//file/69927554852c3f444ef79.jpg",
@@ -331,7 +330,7 @@ def anime_button(update: Update, context: CallbackContext):
                 InlineKeyboardButton("Trailer 🎬", url=trailer),
             ]
         ] if trailer else [[InlineKeyboardButton("🔖 More Info 🔖", url=info)]]
-        buttons.append([InlineKeyboardButton(aback_btn, callback_data=f"anilist_back:anime:{back_hash}:{button_user}")])
+        buttons.append([InlineKeyboardButton("« Back", callback_data=f"anilist_back:anime:{back_hash}:{button_user}")])
 
         if title_img:
             try:
@@ -517,7 +516,7 @@ def manga_button(update: Update, context: CallbackContext):
                 InlineKeyboardButton("More Info", url=info)
             ],
             [
-                InlineKeyboardButton(aback_btn, callback_data=f"anilist_back:manga:{back_hash}:{button_user}")
+                InlineKeyboardButton("« Back", callback_data=f"anilist_back:manga:{back_hash}:{button_user}")
             ]
         ]
         image = f"https://img.anili.st/media/{json.get('id')}"
