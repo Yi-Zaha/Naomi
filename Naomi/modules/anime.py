@@ -195,7 +195,7 @@ def searchanilist(search, manga=False):
         url, json={"query": anilist_query, "variables": variables}
     )
     msg = ""
-    jsonData = json.loads(response.text)
+    jsonData = response.json()
     res = list(jsonData.keys())
     if "errors" in res:
         msg += f"**Error** : `{jsonData['errors'][0]['message']}`"
@@ -392,7 +392,7 @@ def manga(update: Update, context: CallbackContext):
     
     search = search[1]
 
-    result, ok = searchanilist(search)
+    result, ok = searchanilist(search, manga=True)
     
     if not ok:
         update.effective_message.reply_text(result)
