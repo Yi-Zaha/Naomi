@@ -342,7 +342,7 @@ def anime_button(update: Update, context: CallbackContext):
                     reply_markup=InlineKeyboardMarkup(buttons),
                 )
             except:
-                msg += f" [〽️]({image})"
+                msg += f" [〽️]({title_img})"
                 bot.send_message(
                     message.chat.id,
                     msg,
