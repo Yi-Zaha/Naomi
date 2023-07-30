@@ -1,6 +1,7 @@
 import datetime
 import html
 import textwrap
+import random
 
 import bs4
 import jikanpy
@@ -17,7 +18,10 @@ kayo_btn = "Kayo 🏴‍☠️"
 prequel_btn = "⬅️ Prequel"
 sequel_btn = "Sequel ➡️"
 close_btn = "Close ❌"
-
+back_btn = "« Back"
+result_imgs = [
+    "https://te.legra.ph//file/69927554852c3f444ef79.jpg",
+]
 
 def shorten(description, info="anilist.co"):
     msg = ""
@@ -245,17 +249,24 @@ def anime(update: Update, context: CallbackContext):
         update.effective_message.reply_text("Anime not found")
         return
     
+    search_id = str(hash(search))
+    searches[search_id] = search
     buttons = [
         [
             InlineKeyboardButton(
                 anime["title"]["english"] or anime["title"]["romaji"],
-                callback_data=f"anime:{message.from_user.id}:{anime['id']}"
+                callback_data=f"anime:{search_id}:{message.from_user.id}:{anime['id']}"
             )
         ]
         for anime in result
     ]
     
-    update.effective_message.reply_text(f"Search results for *{search}*:", reply_markup=InlineKeyboardMarkup(buttons))
+    update.effective_message.reply_text(
+        photo=random.choice(result_imgs),
+        caption=f"Search results for *{search}*:",
+        parse_mode=ParseMode.MARKDOWN,
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
 
 @run_async
 def anime_button(update: Update, context: CallbackContext):
@@ -263,12 +274,15 @@ def anime_button(update: Update, context: CallbackContext):
     query = update.callback_query
     message = query.message
     data = query.data.split(":")
-    button_user = int(data[1])
-    anime_id = data[2]
+    back_hash = data[1]
+    button_user = int(data[2])
+    anime_id = data[3]
 
     if button_user != query.from_user.id:
         query.answer("You are not the one who issued the command.")
         return
+
+    query.answer("Processing ...")
 
     variables = {"id": anime_id}
     json = requests.post(url, json={"query": anime_query, "variables": variables}).json()
@@ -279,10 +293,9 @@ def anime_button(update: Update, context: CallbackContext):
         return
     
     if json:
-        query.answer("Processing ...")
         json = json["data"]["Media"]
         msg = (
-            f"➳ *Title : {json['title']['romaji']}* *| {json['title']['english']}*\n"
+            f"➳ *Title : {json['title']['romaji']}* *(`{json['title']['native']}`)*\n"
             f"➳ *Type:* {json['format']}\n➳ *Status:* {json['status']}\n"
             f"➳ *Episodes:* {json.get('episodes', 'N/A')}\n"
             f"➳ *Duration:* {json.get('duration', 'N/A')} Per Ep.\n"
@@ -316,7 +329,8 @@ def anime_button(update: Update, context: CallbackContext):
                 InlineKeyboardButton("Trailer 🎬", url=trailer),
             ]
         ] if trailer else [[InlineKeyboardButton("🔖 More Info 🔖", url=info)]]
-        
+        buttons += [InlineKeyboardButton(back_btn, callback_data=f"anilist_back:anime:{back_hash}:{button_user}")]
+
         if title_img:
             try:
                 bot.send_photo(
@@ -401,17 +415,24 @@ def manga(update: Update, context: CallbackContext):
         update.effective_message.reply_text("Manga not found")
         return
     
+    search_id = str(hash(search))
+    searches[search_id] = search
     buttons = [
         [
             InlineKeyboardButton(
                 manga["title"]["english"] or manga["title"]["romaji"],
-                callback_data=f"manga:{message.from_user.id}:{manga['id']}"
+                callback_data=f"manga:{search_id}:{message.from_user.id}:{manga['id']}"
             )
         ]
         for manga in result
     ]
     
-    update.effective_message.reply_text(f"Search results for *{search}*:", reply_markup=InlineKeyboardMarkup(buttons))
+    update.effective_message.reply_text(
+        photo=random.choice(result_imgs),
+        caption=f"Search results for *{search}*:",
+        parse_mode=ParseMode.MARKDOWN,
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
 
 @run_async
 def manga_button(update: Update, context: CallbackContext):
@@ -419,12 +440,15 @@ def manga_button(update: Update, context: CallbackContext):
     query = update.callback_query
     message = query.message
     data = query.data.split(":")
-    button_user = int(data[1])
-    manga_id = data[2]
+    back_hash = data[1]
+    button_user = int(data[2])
+    manga_id = data[3]
 
     if button_user != query.from_user.id:
         query.answer("You are not the one who issued the command.")
         return
+
+    query.answer("Processing ...")
 
     variables = {"id": manga_id}
     json = requests.post(url, json={"query": manga_query, "variables": variables}).json()
@@ -436,7 +460,6 @@ def manga_button(update: Update, context: CallbackContext):
         return
     
     if json:
-        query.answer("Processing ...")
         json = json["data"]["Media"]
         title, title_native, title_english = json["title"].get("romaji", False), json["title"].get(
             "native", False
@@ -489,7 +512,14 @@ def manga_button(update: Update, context: CallbackContext):
         msg = msg[:-2]
         
         info = json["siteUrl"]
-        buttons = [[InlineKeyboardButton("More Info", url=info)]]
+        buttons = [
+            [
+                InlineKeyboardButton("More Info", url=info)
+            ],
+            [
+                InlineKeyboardButton(back_btn, callback_data=f"anilist_back:manga:{back_hash}:{button_user}")
+            ]
+        ]
         image = f"https://img.anili.st/media/{json.get('id')}"
         msg += f"\n\n➳ *Description:*_{bs4.BeautifulSoup(json.get('description', None), features='html.parser').text}_"
         
@@ -520,6 +550,47 @@ def manga_button(update: Update, context: CallbackContext):
         
         message.delete()
 
+@run_async
+def anilist_back(update: Update, context: CallbackContext):
+    query = update.callback_query
+    message = query.message
+    data = query.data.split(":")
+    button_user = int(data[3])
+    search_id = data[2]
+    typea = data[1]
+
+    if button_user != query.from_user.id:
+        query.answer("You are not the one who issued the command.")
+        return
+
+    search = searches.get(search_id, None)
+    if search is None:
+        query.answer("This is an old button. Please redo the command!")
+        return
+    
+    query.answer("Processing ...")
+    result, ok = searchanilist(search, manga=typea == "manga")
+
+    if not result:
+        query.answer(f"{typea} not found")
+        return
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                item["title"]["english"] or item["title"]["romaji"],
+                callback_data=f"{typea}:{search_id}:{button_user}:{item['id']}",
+            )
+        ]
+        for item in result
+    ]
+    
+    message.edit_photo(
+        photo=random.choice(result_imgs),
+        caption=f"Search results for *{search}*:",
+        parse_mode=ParseMode.MARKDOWN,
+        reply_markup=InlineKeyboardMarkup(buttons),
+    )
 
 @run_async
 def user(update: Update, context: CallbackContext):
@@ -732,6 +803,7 @@ AIRING_HANDLER = DisableAbleCommandHandler("airing", airing)
 CHARACTER_HANDLER = DisableAbleCommandHandler("character", character)
 MANGA_HANDLER = DisableAbleCommandHandler("manga", manga)
 MANGA_BUTTON_HANDLER = CallbackQueryHandler(manga_button, pattern="manga:.*")
+ANILIST_BACK_HANDLER = CallbackQueryHandler(anilist_back, pattern="anilist_back:.*")
 USER_HANDLER = DisableAbleCommandHandler("user", user)
 UPCOMING_HANDLER = DisableAbleCommandHandler("upcoming", upcoming)
 KAIZOKU_SEARCH_HANDLER = DisableAbleCommandHandler("kaizoku", kaizoku)
@@ -745,6 +817,7 @@ dispatcher.add_handler(ANIME_BUTTON_HANDLER)
 dispatcher.add_handler(CHARACTER_HANDLER)
 dispatcher.add_handler(MANGA_HANDLER)
 dispatcher.add_handler(MANGA_BUTTON_HANDLER)
+dispatcher.add_handler(ANILIST_BACK_HANDLER)
 dispatcher.add_handler(AIRING_HANDLER)
 dispatcher.add_handler(USER_HANDLER)
 dispatcher.add_handler(KAIZOKU_SEARCH_HANDLER)
