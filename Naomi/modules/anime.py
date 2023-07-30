@@ -336,9 +336,7 @@ def anime_button(update: Update, context: CallbackContext):
         if title_img:
             try:
                 message.edit_media(
-                    media=InputMediaPhoto(title_img),
-                    caption=msg,
-                    parse_mode=ParseMode.MARKDOWN,
+                    media=InputMediaPhoto(title_img, caption=msg, parse_mode=ParseMode.MARKFOWN),
                     reply_markup=InlineKeyboardMarkup(buttons),
                 )
             except:
@@ -526,9 +524,7 @@ def manga_button(update: Update, context: CallbackContext):
         if image:
             try:
                 message.edit_media(
-                    media=InputMediaPhoto(image),
-                    caption=msg,
-                    parse_mode=ParseMode.MARKDOWN,
+                    media=InputMediaPhoto(image, caption=msg, parse_mode=ParseMode.MARKDOWN),
                     reply_markup=InlineKeyboardMarkup(buttons),
                 )
             except Exception:
@@ -585,9 +581,8 @@ def anilist_back(update: Update, context: CallbackContext):
     ]
     
     message.edit_media(
-        media=InputMediaPhoto(random.choice(result_imgs)),
-        caption=f"Search results for *{search}*:",
-        parse_mode=ParseMode.MARKDOWN,
+        media=InputMediaPhoto(random.choice(result_imgs), caption=f"Search results for *{search}*:",
+        parse_mode=ParseMode.MARKDOWN),
         reply_markup=InlineKeyboardMarkup(buttons),
     )
 
