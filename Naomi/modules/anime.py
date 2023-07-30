@@ -22,6 +22,7 @@ back_btn = "« Back"
 result_imgs = [
     "https://te.legra.ph//file/69927554852c3f444ef79.jpg",
 ]
+searches = dict()
 
 def shorten(description, info="anilist.co"):
     msg = ""
