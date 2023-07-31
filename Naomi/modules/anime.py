@@ -297,7 +297,7 @@ def anime_button(update: Update, context: CallbackContext):
     if json:
         json = json["data"]["Media"]
         msg = (
-            f"➳ *Title : {json['title']['romaji']}* (`{json['title']['native']}`)\n"
+            f"➳ *Title : {json['title']['romaji']}* *| {json['title']['english']}*\n"
             f"➳ *Type:* {json['format']}\n➳ *Status:* {json['status']}\n"
             f"➳ *Episodes:* {json.get('episodes', 'N/A')}\n"
             f"➳ *Duration:* {json.get('duration', 'N/A')} Per Ep.\n"
@@ -478,7 +478,7 @@ def manga_button(update: Update, context: CallbackContext):
         if title:
             msg += f"➳ *Title: {title}*"
             if title_english:
-                msg += f" | {title_english}"
+                msg += f"* | {title_english}*"
                 
         if start_year:
             msg += f"\n➳ *Start Date:* {start_day}/{start_month}/{start_year}"
