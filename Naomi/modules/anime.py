@@ -519,7 +519,7 @@ def manga_button(update: Update, context: CallbackContext):
             ],
         ]
         image = f"https://img.anili.st/media/{json.get('id')}"
-        msg += f"\n\n➳ *Description:*_{bs4.BeautifulSoup(json.get('description', None), features='html.parser').text}_"
+        msg += f"\n\n➳ *Description:*_{json.get('description', None)}_"
         
         if image:
             try:
