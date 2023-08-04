@@ -519,8 +519,9 @@ def manga_button(update: Update, context: CallbackContext):
             ],
         ]
         image = f"https://img.anili.st/media/{json.get('id')}"
-        msg += f"\n\n➳ *Description:*_{bs4.BeautifulSoup(json.get('description', None), features='html.parser').text}_"
-        
+        description = BeautifulSoup(json.get("description", None), features="html.parser").text
+        msg += shorten(description, info)
+
         if image:
             try:
                 message.edit_media(
