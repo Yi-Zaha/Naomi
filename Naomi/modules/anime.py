@@ -518,12 +518,7 @@ def manga_button(update: Update, context: CallbackContext):
                 InlineKeyboardButton(back_btn, callback_data=f"anilist_back:manga:{back_hash}:{button_user}")
             ],
         ]
-        description = (
-            json.get("description", "N/A")
-            .replace("<i>", "")
-            .replace("</i>", "")
-            .replace("<br>", "")
-        )
+        description = (json.get("description", "N/A"))
         image = f"https://img.anili.st/media/{json.get('id')}"
         msg += shorten(description, info)
         
