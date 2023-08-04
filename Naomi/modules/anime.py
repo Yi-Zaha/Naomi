@@ -28,7 +28,7 @@ result_imgs = [
 def shorten(description, info="anilist.co"):
     msg = ""
     if len(description) > 700:
-        description = description[0:500] + "...."
+        description = description[0:400] + "...."
         msg += f"\n➳ *Description:* _{description}_[Read More]({info})"
     else:
         msg += f"\n➳ *Description:*_{description}_"
@@ -519,7 +519,7 @@ def manga_button(update: Update, context: CallbackContext):
             ],
         ]
         image = f"https://img.anili.st/media/{json.get('id')}"
-        msg += f"\n\n➳ *Description:*_{json.get('description', None)}_"
+        msg += shorten(description, info)
         
         if image:
             try:
