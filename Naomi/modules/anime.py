@@ -518,9 +518,8 @@ def manga_button(update: Update, context: CallbackContext):
                 InlineKeyboardButton(back_btn, callback_data=f"anilist_back:manga:{back_hash}:{button_user}")
             ],
         ]
-        description = (json.get("description", "N/A"))
         image = f"https://img.anili.st/media/{json.get('id')}"
-        msg += shorten(description, info)
+        msg += f"\n\n➳ *Description:*_{bs4.BeautifulSoup(json.get('description', None), features='html.parser').text}_"
         
         if image:
             try:
