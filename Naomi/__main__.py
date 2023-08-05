@@ -82,13 +82,15 @@ uptime = get_readable_time((time.time() - StartTime))
 
 
 PM_START_TEXT ="""
-*ʜᴇʏ* [👋](https://graph.org/file/755a979e1e5bfb6fc5c0b.jpg) {}, 
-*⌥ ᴛʜɪ𝖘 ɪ𝖘* {}
- ⌥ ᴛʜᴇ ᴍᴏ𝖘ᴛ ᴩᴏᴡᴇʀғᴜʟ ᴛᴇʟᴇɢʀᴀᴍ ɢʀᴏᴜᴩ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ ᴀɴᴅ ɪ ʜᴀᴠᴇ 𝖘ᴏᴍᴇ ᴀᴇ𝖘ᴏᴍᴇ ᴀɴᴅ ᴜ𝖘ᴇғᴜʟ ғᴇᴀᴛᴜʀᴇ𝖘.
+-> Heya *{}*, 
+-> I'm  *{}* A Anime Theme Group Management Robot.
+-> Use /help to know my features.
 
-⌥⌥⌥⌥⌥⌥⌥⌥⌥⌥⌥⌥⌥⌥
+------------------------------------------
 
-⌥ ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ʜᴇʟᴩ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ɪɴғᴏʀᴍᴀᴛɪᴏɴ ᴀʙᴏᴜᴛ ᴍʏ ᴍᴏᴅᴜʟᴇ𝖘 ᴀɴᴅ ᴄᴏᴍᴍᴀɴᴅ𝖘."""
+-> *Uptime:* {uptime}
+-> *Users In DB:* {sql.num_users()}
+-> *Chats in DB:* {sql.num_chats()} """
 
 buttons = [
     [
@@ -98,10 +100,10 @@ buttons = [
         ),
     ],
     [
-        InlineKeyboardButton(text="🐲 ʜᴇʟᴘ & ᴄᴍᴅs 🐲", callback_data="help_back"),
+        InlineKeyboardButton(text="🐲 Help 🐲", callback_data="help_back"),
     ],
     [
-        InlineKeyboardButton(text="🗣 sᴜᴘᴘᴏʀᴛ 🗣", url=f"https://t.me/{SUPPORT_CHAT}"),
+        InlineKeyboardButton(text="🗣 Support 🗣", url=f"https://t.me/{SUPPORT_CHAT}"),
         InlineKeyboardButton(
             text="🍂 Owner 🍂", url=f"https://t.me/{OWNER_USERNAME}"
         ),
@@ -438,28 +440,6 @@ def Fallen_about_callback(update: Update, context: CallbackContext):
 
 
 @run_async
-def Source_about_callback(update: Update, context: CallbackContext):
-    query = update.callback_query
-    if query.data == "source_":
-        query.message.edit_text(
-            text="""*ʜᴇʏ,*\n\n*ᴛʜɪs ɪs ɴᴀᴏᴍɪ ✘ ʀᴏʙᴏᴛ*\n\n*ʜᴇʀᴇ ɪs ᴍʏ sᴏᴜʀᴄᴇ ᴄᴏᴅᴇ :* [ɢɪᴛʜᴜʙ](https://github.com/AnonymousR1025/FallenRobot)\n\n*ᴍʏ sᴏᴜʀᴄᴇ ᴄᴏᴅᴇ ɪs ɪɴ ᴅᴇᴠᴇʟᴏᴘᴍᴇɴᴛ ᴀɴᴅ ɴᴏᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ʏᴇᴛ*\n*sᴏ ɪғ ʏᴏᴜ ғᴏᴜɴᴅ ᴀɴʏ ʙᴜɢ ᴏʀ ɪғ ʏᴏᴜ ᴡᴀɴɴᴀ ʀᴇǫᴜᴇsᴛ ᴀɴʏ ғᴇᴀᴛᴜʀᴇ, ᴩʟᴇᴀsᴇ ʟᴇᴛ ᴜs ᴋɴᴏᴡ ᴀᴛ* [ᴅᴇᴠɪʟs ʜᴇᴀᴠᴇɴ](https://t.me/DevilsHeavenMF) *ᴏʀ ʏᴏᴜ ᴄᴀɴ ᴄᴏɴᴛᴀᴄᴛ ᴍʏ ᴅᴇᴠᴇʟᴏᴩᴇʀ :* [𝝙𝗡𝗢𝗡𝗬𝗠𝗢𝗨𝗦](https://t.me/anonymous_was_bot)""",
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="◁", callback_data="source_back")]]
-            ),
-        )
-    elif query.data == "source_back":
-        query.message.edit_text(
-            PM_START_TEXT.format(dispatcher.bot.first_name),
-            reply_markup=InlineKeyboardMarkup(buttons),
-            parse_mode=ParseMode.MARKDOWN,
-            timeout=60,
-            disable_web_page_preview=False,
-        )
-
-
-@run_async
 def get_help(update: Update, context: CallbackContext):
     chat = update.effective_chat  # type: Optional[Chat]
     args = update.effective_message.text.split(None, 1)
@@ -684,41 +664,6 @@ def get_settings(update: Update, context: CallbackContext):
         send_settings(chat.id, user.id, True)
 
 
-@run_async
-def donate(update: Update, context: CallbackContext):
-    user = update.effective_message.from_user
-    chat = update.effective_chat  # type: Optional[Chat]
-    bot = context.bot
-    if chat.type == "private":
-        update.effective_message.reply_text(
-            DONATE_STRING, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True
-        )
-
-        if OWNER_ID != 1356469075 and DONATION_LINK:
-            update.effective_message.reply_text(
-                "You can also donate to the person currently running me "
-                "[here]({})".format(DONATION_LINK),
-                parse_mode=ParseMode.MARKDOWN,
-            )
-
-    else:
-        try:
-            bot.send_message(
-                user.id,
-                DONATE_STRING,
-                parse_mode=ParseMode.MARKDOWN,
-                disable_web_page_preview=True,
-            )
-
-            update.effective_message.reply_text(
-                "I've PM'ed you about donating to my creator!"
-            )
-        except Unauthorized:
-            update.effective_message.reply_text(
-                "Contact me in PM first to get donation information."
-            )
-
-
 def migrate_chats(update: Update, context: CallbackContext):
     msg = update.effective_message  # type: Optional[Message]
     if msg.migrate_to_chat_id:
@@ -767,11 +712,6 @@ def main():
     about_callback_handler = CallbackQueryHandler(
         Fallen_about_callback, pattern=r"fallen_"
     )
-    source_callback_handler = CallbackQueryHandler(
-        Source_about_callback, pattern=r"source_"
-    )
-
-    donate_handler = CommandHandler("donate", donate)
     migrate_handler = MessageHandler(Filters.status_update.migrate, migrate_chats)
 
     # dispatcher.add_handler(test_handler)
