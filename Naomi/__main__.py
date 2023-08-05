@@ -86,11 +86,7 @@ PM_START_TEXT ="""
 -> I'm  *{}* A Anime Theme Group Management Robot.
 -> Use /help to know my features.
 
-------------------------------------------
-
--> *Uptime:* {uptime}
--> *Users In DB:* {sql.num_users()}
--> *Chats in DB:* {sql.num_chats()} """
+------------------------------------------ """
 
 buttons = [
     [
