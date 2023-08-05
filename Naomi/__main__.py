@@ -96,7 +96,7 @@ buttons = [
         ),
     ],
     [
-        InlineKeyboardButton(text="🐲 Help 🐲", callback_data="send_help"),
+        InlineKeyboardButton(text="🐲 Help 🐲", callback_data="help_back"),
     ],
     [
         InlineKeyboardButton(text="🗣 Support 🗣", url=f"https://t.me/{SUPPORT_CHAT}"),
@@ -109,7 +109,7 @@ buttons = [
 FallenRobot_IMG = "https://graph.org/file/755a979e1e5bfb6fc5c0b.jpg"
 
 HELP_STRINGS = f"""
-Help Module Of Naomi Robot\n\n➲ /start*:* ꜱᴛᴀʀᴛ ᴍᴇ.\n➲ /help*:* ᴀᴠᴀɪʟᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅꜱ ꜱᴇᴄᴛɪᴏɴ."""
+Help Module Of Naomi Robot\n\n➲ /start*:* Start me.\n➲ /help*:* Available commands."""
 
 IMPORTED = {}
 MIGRATEABLE = []
