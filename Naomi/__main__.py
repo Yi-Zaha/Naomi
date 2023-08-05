@@ -82,7 +82,7 @@ uptime = get_readable_time((time.time() - StartTime))
 
 
 PM_START_TEXT ="""
-*ʜᴇʏ* [👋](https://telegra.ph/file/755a979e1e5bfb6fc5c0b.jpg) {}, 
+*ʜᴇʏ* [👋](https://graph.org/file/755a979e1e5bfb6fc5c0b.jpg) {}, 
 *⌥ ᴛʜɪ𝖘 ɪ𝖘* {}
  ⌥ ᴛʜᴇ ᴍᴏ𝖘ᴛ ᴩᴏᴡᴇʀғᴜʟ ᴛᴇʟᴇɢʀᴀᴍ ɢʀᴏᴜᴩ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ ᴀɴᴅ ɪ ʜᴀᴠᴇ 𝖘ᴏᴍᴇ ᴀᴇ𝖘ᴏᴍᴇ ᴀɴᴅ ᴜ𝖘ᴇғᴜʟ ғᴇᴀᴛᴜʀᴇ𝖘.
 
@@ -108,7 +108,7 @@ buttons = [
     ],
 ]
 
-FallenRobot_IMG = "https://telegra.ph/file/755a979e1e5bfb6fc5c0b.jpg"
+FallenRobot_IMG = "https://graph.org/file/755a979e1e5bfb6fc5c0b.jpg"
 
 HELP_STRINGS = f"""
 Help Module Of Naomi Robot\n\n➲ /start*:* ꜱᴛᴀʀᴛ ᴍᴇ.\n➲ /help*:* ᴀᴠᴀɪʟᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅꜱ ꜱᴇᴄᴛɪᴏɴ."""
@@ -214,10 +214,9 @@ def start(update: Update, context: CallbackContext):
  
         else:
             first_name = update.effective_user.first_name
-            update.effective_message.reply_text(
-                PM_START_TEXT.format(
-                    escape_markdown(first_name), dispatcher.bot.first_name
-                ),
+            update.effective_message.reply_photo(
+                photo="https://graph.org/file/755a979e1e5bfb6fc5c0b.jpg",
+                caption=PM_START_TEXT.format(escape_markdown(first_name), dispatcher.bot.first_name),
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
                 timeout=60,
@@ -745,7 +744,7 @@ def main():
         try:
             dispatcher.bot.send_photo(
                 f"@{SUPPORT_CHAT}",
-                photo="https://telegra.ph/file/755a979e1e5bfb6fc5c0b.jpg",
+                photo="https://graph.org/file/755a979e1e5bfb6fc5c0b.jpg",
                 caption=f"Good to see ya master again",
                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="🐲 ʜᴇʟᴘ & ᴄᴍᴅs 🐲",url='t.me/naomi_robot?start=help')]]),
                 parse_mode=ParseMode.MARKDOWN,)
