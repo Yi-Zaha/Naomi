@@ -58,7 +58,6 @@ python-arq
 gpytranslate
 yt_dlp
 pendulum>=1.3.1
-nudepy
 telegram
 nekos.py
 envparse
