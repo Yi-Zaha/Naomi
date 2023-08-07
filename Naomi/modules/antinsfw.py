@@ -4,14 +4,12 @@ from pyrogram import filters
 from SafoneAPI import SafoneAPI
 
 from Naomi import BOT_USERNAME as bn
-from Naomi import pbot, arq
+from Naomi import pbot, arq as api
 from Naomi.utils.errors import capture_err
 from Naomi.utils.permissions import adminsOnly
 from Naomi.helper_extra.dbfun import is_nsfw_on, nsfw_off, nsfw_on
 from Naomi.modules.sql1 import nsfw_sql
 from Naomi.utils.filter_groups import nsfw_detect_group
-
-api = SafoneAPI()
 
 async def get_file_id_from_message(message):
     file_id = None
