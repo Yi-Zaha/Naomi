@@ -1,6 +1,7 @@
 from os import remove
 
 from pyrogram import filters
+from SafoneAPI import SafoneAPI
 
 from Naomi import BOT_USERNAME as bn
 from Naomi import pbot, arq
@@ -9,6 +10,8 @@ from Naomi.utils.permissions import adminsOnly
 from Naomi.helper_extra.dbfun import is_nsfw_on, nsfw_off, nsfw_on
 from Naomi.modules.sql1 import nsfw_sql
 from Naomi.utils.filter_groups import nsfw_detect_group
+
+api = SafoneAPI()
 
 async def get_file_id_from_message(message):
     file_id = None
@@ -65,7 +68,7 @@ async def detect_nsfw(_, message):
         return
     file = await pbot.download_media(file_id)
     try:
-        results = await arq.nsfw_scan(file=file)
+        results = await api.nsfw_scan(file=file)
     except Exception:
         return
     if not results.ok:
@@ -121,7 +124,7 @@ async def nsfw_scan_command(_, message):
         return await m.edit("`Something wrong happened LOL`")
     file = await pbot.download_media(file_id)
     try:
-        results = await arq.nsfw_scan(file=file)
+        results = await api.nsfw_scan(file=file)
     except Exception:
         return
     remove(file)
