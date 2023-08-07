@@ -69,3 +69,4 @@ janda
 uvicorn[standard]
 fastapi
 ffmpeg-python
+SafoneAPI
