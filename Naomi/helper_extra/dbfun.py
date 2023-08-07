@@ -1,8 +1,31 @@
+"""
+MIT License
+
+Copyright (c) 2021 TheHamkerCat
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
 import codecs
 import pickle
 from typing import Dict, List, Union
 
-from Naomi.mongo import db
+from Naomi import db
 
 # SOME THINGS ARE FUCKED UP HERE, LIKE TOGGLEABLES HAVE THEIR OWN COLLECTION
 # (SHOULD FIX IT WITH SOMETHING LIKE TOGGLEDB), MOST OF THE CODE IS BAD AF
@@ -13,7 +36,7 @@ from Naomi.mongo import db
 notesdb = db.notes
 filtersdb = db.filters
 warnsdb = db.warns
-repdb = db.rep2
+karmadb = db.karma
 chatsdb = db.chats
 usersdb = db.users
 gbansdb = db.gban
@@ -22,6 +45,7 @@ captchadb = db.captcha
 solved_captcha_db = db.solved_captcha
 captcha_cachedb = db.captcha_cache
 antiservicedb = db.antiservice
+pmpermitdb = db.pmpermit
 welcomedb = db.welcome_text
 blacklist_filtersdb = db.blacklistFilters
 pipesdb = db.pipes
@@ -30,19 +54,18 @@ blacklist_chatdb = db.blacklistChat
 restart_stagedb = db.restart_stage
 flood_toggle_db = db.flood_toggle
 rssdb = db.rss
-pmpermitdb = db.pmpermit
-nsfwdb = db.nsfw
+stickerpackname = db.packname
+nsfw_filtersdb = db.nsfw_allowed
+
 
 def obj_to_str(obj):
     if not obj:
         return False
-    string = codecs.encode(pickle.dumps(obj), "base64").decode()
-    return string
+    return codecs.encode(pickle.dumps(obj), "base64").decode()
 
 
 def str_to_obj(string: str):
-    obj = pickle.loads(codecs.decode(string.encode(), "base64"))
-    return obj
+    return pickle.loads(codecs.decode(string.encode(), "base64"))
 
 
 async def get_notes_count() -> dict:
@@ -169,11 +192,8 @@ async def delete_filter(chat_id: int, name: str) -> bool:
 
 async def int_to_alpha(user_id: int) -> str:
     alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
-    text = ""
     user_id = str(user_id)
-    for i in user_id:
-        text += alphabet[int(i)]
-    return text
+    return "".join(alphabet[int(i)] for i in user_id)
 
 
 async def alpha_to_int(user_id_alphabet: str) -> int:
@@ -238,7 +258,7 @@ async def remove_warns(chat_id: int, name: str) -> bool:
 
 
 async def get_karmas_count() -> dict:
-    chats = repdb.find({"chat_id": {"$lt": 0}})
+    chats = karmadb.find({"chat_id": {"$lt": 0}})
     if not chats:
         return {}
     chats_count = 0
@@ -253,7 +273,7 @@ async def get_karmas_count() -> dict:
 
 
 async def user_global_karma(user_id) -> int:
-    chats = repdb.find({"chat_id": {"$lt": 0}})
+    chats = karmadb.find({"chat_id": {"$lt": 0}})
     if not chats:
         return 0
     total_karma = 0
@@ -265,7 +285,7 @@ async def user_global_karma(user_id) -> int:
 
 
 async def get_karmas(chat_id: int) -> Dict[str, int]:
-    karma = repdb.find_one({"chat_id": chat_id})
+    karma = await karmadb.find_one({"chat_id": chat_id})
     if not karma:
         return {}
     return karma["karma"]
@@ -282,57 +302,33 @@ async def update_karma(chat_id: int, name: str, karma: dict):
     name = name.lower().strip()
     karmas = await get_karmas(chat_id)
     karmas[name] = karma
-    repdb.update_one(
+    await karmadb.update_one(
         {"chat_id": chat_id}, {"$set": {"karma": karmas}}, upsert=True
     )
 
 
 async def is_karma_on(chat_id: int) -> bool:
-    chat = repdb.find_one({"chat_id_toggle": chat_id})
-    if not chat:
-        return True
-    return False
+    chat = await karmadb.find_one({"chat_id_toggle": chat_id})
+    return not chat
 
 
 async def karma_on(chat_id: int):
     is_karma = await is_karma_on(chat_id)
     if is_karma:
         return
-    return repdb.delete_one({"chat_id_toggle": chat_id})
+    return await karmadb.delete_one({"chat_id_toggle": chat_id})
 
 
 async def karma_off(chat_id: int):
     is_karma = await is_karma_on(chat_id)
     if not is_karma:
         return
-    return repdb.insert_one({"chat_id_toggle": chat_id})
-
-
-async def is_nsfw_on(chat_id: int) -> bool:
-    chat = nsfwdb.find_one({"chat_id": chat_id})
-    if not chat:
-        return True
-    return False
-
-async def nsfw_on(chat_id: int):
-    is_nsfw = is_nsfw_on(chat_id)
-    if is_nsfw:
-        return
-    return nsfwdb.delete_one({"chat_id": chat_id})
-
-
-async def nsfw_off(chat_id: int):
-    is_nsfw = is_nsfw_on(chat_id)
-    if not is_nsfw:
-        return
-    return nsfwdb.insert_one({"chat_id": chat_id})
+    return await karmadb.insert_one({"chat_id_toggle": chat_id})
 
 
 async def is_served_chat(chat_id: int) -> bool:
     chat = await chatsdb.find_one({"chat_id": chat_id})
-    if not chat:
-        return False
-    return True
+    return bool(chat)
 
 
 async def get_served_chats() -> list:
@@ -361,9 +357,7 @@ async def remove_served_chat(chat_id: int):
 
 async def is_served_user(user_id: int) -> bool:
     user = await usersdb.find_one({"user_id": user_id})
-    if not user:
-        return False
-    return True
+    return bool(user)
 
 
 async def get_served_users() -> list:
@@ -390,28 +384,26 @@ async def get_gbans_count() -> int:
 
 
 async def is_gbanned_user(user_id: int) -> bool:
-    user = gbansdb.find_one({"user_id": user_id})
-    if not user:
-        return False
-    return True
+    user = await gbansdb.find_one({"user_id": user_id})
+    return bool(user)
 
 
 async def add_gban_user(user_id: int):
     is_gbanned = await is_gbanned_user(user_id)
     if is_gbanned:
         return
-    return gbansdb.insert_one({"user_id": user_id})
+    return await gbansdb.insert_one({"user_id": user_id})
 
 
 async def remove_gban_user(user_id: int):
     is_gbanned = await is_gbanned_user(user_id)
     if not is_gbanned:
         return
-    return gbansdb.delete_one({"user_id": user_id})
+    return await gbansdb.delete_one({"user_id": user_id})
 
 
 async def _get_lovers(chat_id: int):
-    lovers = coupledb.find_one({"chat_id": chat_id})
+    lovers = await coupledb.find_one({"chat_id": chat_id})
     if not lovers:
         return {}
     return lovers["couple"]
@@ -427,7 +419,7 @@ async def get_couple(chat_id: int, date: str):
 async def save_couple(chat_id: int, date: str, couple: dict):
     lovers = await _get_lovers(chat_id)
     lovers[date] = couple
-    coupledb.update_one(
+    await coupledb.update_one(
         {"chat_id": chat_id},
         {"$set": {"couple": lovers}},
         upsert=True,
@@ -435,24 +427,22 @@ async def save_couple(chat_id: int, date: str, couple: dict):
 
 
 async def is_captcha_on(chat_id: int) -> bool:
-    chat = captchadb.find_one({"chat_id": chat_id})
-    if not chat:
-        return True
-    return False
+    chat = await captchadb.find_one({"chat_id": chat_id})
+    return not chat
 
 
 async def captcha_on(chat_id: int):
     is_captcha = await is_captcha_on(chat_id)
     if is_captcha:
         return
-    return captchadb.delete_one({"chat_id": chat_id})
+    return await captchadb.delete_one({"chat_id": chat_id})
 
 
 async def captcha_off(chat_id: int):
     is_captcha = await is_captcha_on(chat_id)
     if not is_captcha:
         return
-    return captchadb.insert_one({"chat_id": chat_id})
+    return await captchadb.insert_one({"chat_id": chat_id})
 
 
 async def has_solved_captcha_once(chat_id: int, user_id: int):
@@ -472,9 +462,7 @@ async def save_captcha_solved(chat_id: int, user_id: int):
 
 async def is_antiservice_on(chat_id: int) -> bool:
     chat = await antiservicedb.find_one({"chat_id": chat_id})
-    if not chat:
-        return True
-    return False
+    return not chat
 
 
 async def antiservice_on(chat_id: int):
@@ -492,24 +480,22 @@ async def antiservice_off(chat_id: int):
 
 
 async def is_pmpermit_approved(user_id: int) -> bool:
-    user = pmpermitdb.find_one({"user_id": user_id})
-    if not user:
-        return False
-    return True
+    user = await pmpermitdb.find_one({"user_id": user_id})
+    return bool(user)
 
 
 async def approve_pmpermit(user_id: int):
     is_pmpermit = await is_pmpermit_approved(user_id)
     if is_pmpermit:
         return
-    return pmpermitdb.insert_one({"user_id": user_id})
+    return await pmpermitdb.insert_one({"user_id": user_id})
 
 
 async def disapprove_pmpermit(user_id: int):
     is_pmpermit = await is_pmpermit_approved(user_id)
     if not is_pmpermit:
         return
-    return pmpermitdb.delete_one({"user_id": user_id})
+    return await pmpermitdb.delete_one({"user_id": user_id})
 
 
 async def get_welcome(chat_id: int) -> str:
@@ -531,10 +517,10 @@ async def del_welcome(chat_id: int):
 
 async def update_captcha_cache(captcha_dict):
     pickle = obj_to_str(captcha_dict)
-    captcha_cachedb.delete_one({"captcha": "cache"})
+    await captcha_cachedb.delete_one({"captcha": "cache"})
     if not pickle:
         return
-    captcha_cachedb.update_one(
+    await captcha_cachedb.update_one(
         {"captcha": "cache"},
         {"$set": {"pickled": pickle}},
         upsert=True,
@@ -542,7 +528,7 @@ async def update_captcha_cache(captcha_dict):
 
 
 async def get_captcha_cache():
-    cache = captcha_cachedb.find_one({"captcha": "cache"})
+    cache = await captcha_cachedb.find_one({"captcha": "cache"})
     if not cache:
         return []
     return str_to_obj(cache["pickled"])
@@ -710,9 +696,7 @@ async def clean_restart_stage() -> dict:
 
 async def is_flood_on(chat_id: int) -> bool:
     chat = await flood_toggle_db.find_one({"chat_id": chat_id})
-    if not chat:
-        return True
-    return False
+    return not chat
 
 
 async def flood_on(chat_id: int):
@@ -758,19 +742,47 @@ async def get_rss_feeds() -> list:
     feeds = await feeds.to_list(length=10000000)
     if not feeds:
         return
-    data = []
-    for feed in feeds:
-        data.append(
-            dict(
-                chat_id=feed["chat_id"],
-                url=feed["url"],
-                last_title=feed["last_title"],
-            )
+    return [
+        dict(
+            chat_id=feed["chat_id"],
+            url=feed["url"],
+            last_title=feed["last_title"],
         )
-    return data
+        for feed in feeds
+    ]
 
 
 async def get_rss_feeds_count() -> int:
     feeds = rssdb.find({"chat_id": {"$exists": 1}})
     feeds = await feeds.to_list(length=10000000)
     return len(feeds)
+
+
+async def get_packname(chat_id: int) -> str:
+    text = await stickerpackname.find_one({"chat_id": chat_id})
+    if not text:
+        return ""
+    return text["text"]
+
+
+async def set_packname(chat_id: int, text: str):
+    return await stickerpackname.update_one(
+        {"chat_id": chat_id}, {"$set": {"text": text}}, upsert=True
+    )
+
+
+async def del_packname(chat_id: int):
+    return await stickerpackname.delete_one({"chat_id": chat_id})
+
+
+async def set_nsfw_status(chat_id: int, allowed: bool):
+    return await nsfw_filtersdb.update_one(
+        {"chat_id": chat_id}, {"$set": {"allowed": allowed}}, upsert=True
+    )
+
+
+async def get_nsfw_status(chat_id: int) -> bool:
+    text = await nsfw_filtersdb.find_one({"chat_id": chat_id})
+    if not text:
+        return False
+    return text["allowed"]
