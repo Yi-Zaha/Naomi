@@ -12,7 +12,8 @@ from Naomi.helper_extra.dbfun import is_nsfw_on, nsfw_off, nsfw_on
 from Naomi.modules.sql1 import nsfw_sql
 from Naomi.utils.filter_groups import nsfw_detect_group
 
-api=SafoneAPI()
+api = SafoneAPI()
+
 async def get_file_id_from_message(message):
     file_id = None
     if message.document:
@@ -73,7 +74,7 @@ async def detect_nsfw(_, message):
         return
     if not results.ok:
         return
-    results = results.result
+    results = results.data
     remove(file)
     nsfw = results.is_nsfw
     if not nsfw:
@@ -130,7 +131,7 @@ async def nsfw_scan_command(_, message):
     remove(file)
     if not results.ok:
         return await m.edit(results.result)
-    results = results.result
+    results = results.data
     await m.edit(
         f"""
 **Neutral:** `{results.neutral} %`
