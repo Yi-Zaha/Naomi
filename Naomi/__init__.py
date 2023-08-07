@@ -172,7 +172,7 @@ DRAGONS.add(OWNER_ID)
 DEV_USERS.add(OWNER_ID)
 
 
-updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
+updater = tg.Updater(TOKEN, use_context=True)
 telethn = TelegramClient("Naomi", API_ID, API_HASH)
 
 pbot = Client("NaomiRobot", api_id=API_ID, api_hash=API_HASH, bot_token=TOKEN)
