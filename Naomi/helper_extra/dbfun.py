@@ -286,7 +286,7 @@ async def user_global_karma(user_id) -> int:
 
 
 async def get_karmas(chat_id: int) -> Dict[str, int]:
-    karma = await karmadb.find_one({"chat_id": chat_id})
+    karma = karmadb.find_one({"chat_id": chat_id})
     if not karma:
         return {}
     return karma["karma"]
@@ -294,14 +294,14 @@ async def get_karmas(chat_id: int) -> Dict[str, int]:
 
 async def get_karma(chat_id: int, name: str) -> Union[bool, dict]:
     name = name.lower().strip()
-    karmas = await get_karmas(chat_id)
+    karmas = get_karmas(chat_id)
     if name in karmas:
         return karmas[name]
 
 
 async def update_karma(chat_id: int, name: str, karma: dict):
     name = name.lower().strip()
-    karmas = await get_karmas(chat_id)
+    karmas = get_karmas(chat_id)
     karmas[name] = karma
     await karmadb.update_one(
         {"chat_id": chat_id}, {"$set": {"karma": karmas}}, upsert=True
@@ -317,14 +317,14 @@ async def karma_on(chat_id: int):
     is_karma = is_karma_on(chat_id)
     if is_karma:
         return
-    return await karmadb.delete_one({"chat_id_toggle": chat_id})
+    return karmadb.delete_one({"chat_id_toggle": chat_id})
 
 
 async def karma_off(chat_id: int):
     is_karma = is_karma_on(chat_id)
     if not is_karma:
         return
-    return await karmadb.insert_one({"chat_id_toggle": chat_id})
+    return karmadb.insert_one({"chat_id_toggle": chat_id})
 
 
 async def is_served_chat(chat_id: int) -> bool:
