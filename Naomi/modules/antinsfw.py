@@ -72,7 +72,7 @@ async def detect_nsfw(_, message):
         results = await api.nsfw_scan(file=file, mode="rb")
     except Exception:
         return
-    if not results.ok:
+    if not results.success:
         return
     results = results.data
     remove(file)
@@ -129,8 +129,8 @@ async def nsfw_scan_command(_, message):
     except Exception:
         return
     remove(file)
-    if not results.ok:
-        return await m.edit(results.result)
+    if not results.success:
+        return await m.edit(results.data)
     results = results.data
     await m.edit(
         f"""
