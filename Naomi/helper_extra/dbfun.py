@@ -264,7 +264,7 @@ async def get_karmas_count() -> dict:
         return {}
     chats_count = 0
     karmas_count = 0
-    for chat in await chats.to_list(length=1000000):
+    for chat in chats.to_list(length=1000000):
         for i in chat["karma"]:
             karma_ = chat["karma"][i]["karma"]
             if karma_ > 0:
@@ -278,8 +278,8 @@ async def user_global_karma(user_id) -> int:
     if not chats:
         return 0
     total_karma = 0
-    for chat in await chats.to_list(length=1000000):
-        karma = await get_karma(chat["chat_id"], await int_to_alpha(user_id))
+    for chat in chats.to_list(length=1000000):
+        karma = get_karma(chat["chat_id"], await int_to_alpha(user_id))
         if karma and (int(karma["karma"]) > 0):
             total_karma += int(karma["karma"])
     return total_karma
