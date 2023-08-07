@@ -1,6 +1,7 @@
 from os import remove
 
 from pyrogram import filters
+from pyrogram.enums import ParseMode
 from SafoneAPI import SafoneAPI
 
 from Naomi import BOT_USERNAME as bn
@@ -92,7 +93,7 @@ async def detect_nsfw(_, message):
 **Drawings:** `{results.drawings} %`
 **————————————————————————**
 __Use `/antinsfw off` to disable this.__
-"""
+""", parse_mode=ParseMode.MARKDOWN
     )
 
 
@@ -137,7 +138,7 @@ async def nsfw_scan_command(_, message):
 **Sexy:** `{results.sexy} %`
 **Drawings:** `{results.drawings} %`
 **NSFW:** `{results.is_nsfw}`
-"""
+""", parse_mode=ParseMode.MARKDOWN
     )
 
 
