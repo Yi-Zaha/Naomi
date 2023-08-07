@@ -69,7 +69,7 @@ async def detect_nsfw(_, message):
         return
     file = await pbot.download_media(file_id)
     try:
-        results = await api.nsfw_scan(file=file, mode="rb")
+        results = await api.nsfw_scan(file=file)
     except Exception:
         return
     if not results.success:
