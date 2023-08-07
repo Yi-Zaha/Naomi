@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from Naomi import LOGGER as log
-DB_URI = "postgres://bovnygnt:HbpZhz6T6Koeub6B-QfpgcIyYD4HpeZU@jelani.db.elephantsql.com/bovnygnt"
+DB_URI = "postgres://cnkorxgc:RdjuA97x_N9-gCJJSldVan5q-GvOAGdC@arjuna.db.elephantsql.com/cnkorxgc"
 if DB_URI and DB_URI.startswith("postgres://"):
     DB_URI = DB_URI.replace("postgres://", "postgresql://", 1)
 
