@@ -4,7 +4,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from Naomi import LOGGER as log
 
-DB_URI = "postgres://nkpkyrin:UU3aqPhNa8iPOL0oASI7IvYexLyn6ihT@floppy.db.elephantsql.com/nkpkyrin"
+DB_URI = "postgres://hcslrwpy:QQiW_-rDRONHeIFKVVx19cJf6zdt1GsR@heffalump.db.elephantsql.com/hcslrwpy"
 
 if DB_URI and DB_URI.startswith("postgres://"):
     DB_URI = DB_URI.replace("postgres://", "postgresql://", 1)
