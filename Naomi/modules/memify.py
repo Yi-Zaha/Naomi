@@ -11,10 +11,6 @@ from Naomi import LOGGER, TEMP_DOWNLOAD_DIRECTORY
 
 from Naomi import telethn as bot
 
-
-Credit = "AnonymousBoy1025"
-
-
 @register(pattern="^/mmf ?(.*)")
 async def handler(event):
 
@@ -38,13 +34,7 @@ async def handler(event):
 
     file = await bot.download_media(reply_message)
 
-    msg = await event.reply("```Memifying this image! ✊🏻 ```")
-
-    if "AnonymousBoy1025" in Credit:
-        pass
-
-    else:
-        await event.reply("This nigga removed credit line from code")
+    msg = await event.reply("```Memifying this image!```")
 
     text = str(event.pattern_match.group(1)).strip()
 
@@ -77,7 +67,7 @@ async def drawText(image_path, text):
 
     else:
 
-        fnt = "./FallenRobot/resources/default.ttf"
+        fnt = "./Naomi/resources/default.ttf"
 
     m_font = ImageFont.truetype(fnt, int((70 / 640) * i_width))
 
