@@ -3,6 +3,7 @@ from pyrogram import filters
 from aiohttp import ClientSession
 from Python_ARQ import ARQ
 from pyrogram.types import ChatPermissions, ChatMember
+import re
 
 from Naomi import pbot as app, OWNER_ID
 from Naomi.utils.errors import capture_err
