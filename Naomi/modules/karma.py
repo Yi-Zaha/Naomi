@@ -23,7 +23,7 @@ from Naomi import arq
 regex_upvote = (
     r"((?s)\+|\+\+|\+1|thx|thanx|thanks|🖤|❣️|💝|💖|💕|❤|💘|cool|good|👍|baby|bsdk|bhadve|betichod|thankyou|love|pro)$"
 )
-regex_downvote = r"^(\-|\-\-|\-1|👎|💔|noob|weak|fuck off|nub|gey|mf)$"
+regex_downvote = r"(\-|\-\-|\-1|👎|💔|noob|weak|fuck off|nub|gey|mf)$"
 
 
 karma_positive_group = 3
@@ -35,7 +35,7 @@ karma_negative_group = 4
     & filters.group
     & filters.incoming
     & filters.reply
-    & filters.regex((?s)regex_upvote, re.IGNORECASE)
+    & filters.regex(regex_upvote, re.IGNORECASE)
     & ~filters.via_bot
     & ~filters.bot,
     group=karma_positive_group,
