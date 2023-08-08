@@ -35,7 +35,7 @@ karma_negative_group = 4
     & filters.group
     & filters.incoming
     & filters.reply
-    & filters.regex(regex_upvote, re.IGNORECASE)
+    & filters.regex((?s)regex_upvote, re.IGNORECASE)
     & ~filters.via_bot
     & ~filters.bot,
     group=karma_positive_group,
