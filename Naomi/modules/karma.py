@@ -20,10 +20,11 @@ from Naomi.helper_extra.dbfun import (
 )
 from Naomi import arq
 
-regex_upvote = (
-    r"((?s)\+|\+\+|\+1|thx|thanx|thanks|🖤|❣️|💝|💖|💕|❤|💘|cool|good|👍|baby|bsdk|bhadve|betichod|thankyou|love|pro)$"
+regex_upvote = re.compile(
+    r"((?s)\+|\+\+|\+1|thx|thanx|thanks|🖤|❣️|💝|💖|💕|❤|💘|cool|good|👍|baby|bsdk|bhadve|betichod|thankyou|love|pro)$",
+    re.IGNORECASE
 )
-regex_downvote = r"(\-|\-\-|\-1|👎|💔|noob|weak|fuck off|nub|gey|mf)$"
+regex_downvote = re.compile(r"(\-|\-\-|\-1|👎|💔|noob|weak|fuck off|nub|gey|mf)$", re.IGNORECASE)
 
 
 karma_positive_group = 3
@@ -35,7 +36,7 @@ karma_negative_group = 4
     & filters.group
     & filters.incoming
     & filters.reply
-    & filters.regex(regex_upvote, re.IGNORECASE)
+    & filters.regex(regex_upvote)
     & ~filters.via_bot
     & ~filters.bot,
     group=karma_positive_group,
